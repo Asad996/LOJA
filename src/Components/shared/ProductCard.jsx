@@ -27,7 +27,8 @@ const ProductCard = ({ name, price, bgimgUrl, hoverImgUrl, onAddToCart,onquicksh
                     <p className='font-semibold text-sm text-[#2b2b2b]'>{price}$</p>
                 </div>
                 <button 
-                    onClick={onAddToCart} 
+                    onClick={onAddToCart}
+
                     className='2xs-custom:mt-0 flex justify-center items-center border border-[rgb(182,142,116)] hover:bg-[rgb(182,142,116)] hover:text-white rounded-md px-3 py-[5px] shadow-[0px_0px_8px_rgba(0,0,0,0.2)]' 
                     type='button'>
                     <span className='text-[8.5px] tracking-widest me-2'>ADD TO CART</span>

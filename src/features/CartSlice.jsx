@@ -1,10 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 import ClothesList from "../helpers/ClothesList";
 import WomensCLothes from "../helpers/WomensCLothes";
+import toast from 'react-hot-toast';
+
+// Load cart from localStorage if available
+const loadCartFromLocalStorage = () => {
+    try {
+        const serializedState = localStorage.getItem('cart');
+        return serializedState ? JSON.parse(serializedState) : [];
+    } catch (e) {
+        console.error("Could not load cart from localStorage", e);
+        return [];
+    }
+};
 
 const initialState = {
     productdetail: null,
-    cart: [],
+    cart: loadCartFromLocalStorage(),
     items: ClothesList,
     items2: WomensCLothes,
     totalQuantity: 0,
@@ -22,11 +34,23 @@ export const CartSlice = createSlice({
             } else {
                 state.cart.push({ ...action.payload, quantity: 1 });
             }
+            saveCartToLocalStorage(state.cart);
+            toast.success(`${action.payload.name} added to cart!`);
+        },
+
+        removeItem: (state, action) => {
+            const itemToRemove = state.cart.find((item) => item.id === action.payload);
+            state.cart = state.cart.filter((item) => item.id !== action.payload);
+            saveCartToLocalStorage(state.cart);
+            if (itemToRemove) {
+                toast.error(`${itemToRemove.name} removed from cart!`);
+            }
         },
 
         quickshop: (state, action) => {
             state.productdetail = { ...action.payload, quantity: action.payload.quantity || 1 };
         },
+
         getCartTotal: (state) => {
             const { totalQuantity, totalPrice } = state.cart.reduce(
                 (cartTotal, cartItem) => {
@@ -44,9 +68,7 @@ export const CartSlice = createSlice({
             state.totalPrice = parseInt(totalPrice.toFixed(2));
             state.totalQuantity = totalQuantity;
         },
-        removeItem: (state, action) => {
-            state.cart = state.cart.filter((item) => item.id !== action.payload);
-        },
+
         increaseItemQuantity: (state, action) => {
             state.cart = state.cart.map((item) => {
                 if (item.id === action.payload) {
@@ -54,7 +76,9 @@ export const CartSlice = createSlice({
                 }
                 return item;
             });
+            saveCartToLocalStorage(state.cart);
         },
+
         decreaseItemQuantity: (state, action) => {
             state.cart = state.cart.map((item) => {
                 if (item.id === action.payload && item.quantity > 1) {
@@ -62,9 +86,20 @@ export const CartSlice = createSlice({
                 }
                 return item;
             });
+            saveCartToLocalStorage(state.cart);
         },
     },
 });
+
+// Save cart to localStorage
+const saveCartToLocalStorage = (cart) => {
+    try {
+        const serializedState = JSON.stringify(cart);
+        localStorage.setItem('cart', serializedState);
+    } catch (e) {
+        console.error("Could not save cart to localStorage", e);
+    }
+};
 
 export const {
     addToCart,
@@ -74,4 +109,5 @@ export const {
     decreaseItemQuantity,
     quickshop,
 } = CartSlice.actions;
+
 export default CartSlice.reducer;

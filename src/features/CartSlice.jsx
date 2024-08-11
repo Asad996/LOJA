@@ -3,7 +3,6 @@ import ClothesList from "../helpers/ClothesList";
 import WomensCLothes from "../helpers/WomensCLothes";
 import toast from 'react-hot-toast';
 
-// Load cart from localStorage if available
 const loadCartFromLocalStorage = () => {
     try {
         const serializedState = localStorage.getItem('cart');
@@ -19,6 +18,7 @@ const initialState = {
     cart: loadCartFromLocalStorage(),
     items: ClothesList,
     items2: WomensCLothes,
+    searchTerm: '', // Add search term to the state
     totalQuantity: 0,
     totalPrice: 0,
 };
@@ -88,10 +88,13 @@ export const CartSlice = createSlice({
             });
             saveCartToLocalStorage(state.cart);
         },
+
+        setSearchTerm: (state, action) => {
+            state.searchTerm = action.payload;
+        },
     },
 });
 
-// Save cart to localStorage
 const saveCartToLocalStorage = (cart) => {
     try {
         const serializedState = JSON.stringify(cart);
@@ -108,6 +111,7 @@ export const {
     increaseItemQuantity,
     decreaseItemQuantity,
     quickshop,
+    setSearchTerm, // Export the setSearchTerm action
 } = CartSlice.actions;
 
 export default CartSlice.reducer;

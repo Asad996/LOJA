@@ -16,9 +16,9 @@ const ProductCard = ({ name, price, bgimgUrl, hoverImgUrl, onAddToCart,onquicksh
             >
               <Link to="/productdetail">  <button 
                 onClick={onquickshop}
-                    className='absolute bottom-0 left-0  right-0 w-full bg-[rgba(182,142,116,0.56)] text-black text-sm py-2 '
+                    className='absolute bottom-0 left-0  right-0 w-full bg-[rgba(182,142,116,0.52)] text-black text-sm py-2 hover:bg-[rgba(182,142,116,0.67)]'
                     type='button'>
-                    Quick Shop
+                     Quick Shop
                 </button></Link>
             </div>
             <div className='flex justify-between mt-5 items-center'>
